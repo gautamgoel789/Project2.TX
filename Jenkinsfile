@@ -7,11 +7,11 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/GoutamTx/php_application.git'
-            }
-        }
+      //  stage('Checkout') {
+        //    steps {
+          //      git 'https://github.com/GoutamTx/php_application.git'
+            //}
+        //}
 
         stage('Build & Push PHP Image') {
             steps {
