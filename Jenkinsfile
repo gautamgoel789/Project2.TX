@@ -27,9 +27,9 @@ pipeline {
         stage('Deploy') {
             steps {
                 bat '''
-                    docker-compose down || echo "Ignore errors"
-                    docker-compose pull
-                    docker-compose up -d --build
+                    docker stack rm php-app || echo "Stack not found, continuing"
+                    timeout 10
+                    docker stack deploy -c docker-compose.yml php-app
                 '''
             }
         }
