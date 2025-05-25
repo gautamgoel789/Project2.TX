@@ -26,8 +26,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh '''
-                    docker-compose down || true
+                bat '''
+                    docker-compose down || echo "Ignore errors"
                     docker-compose pull
                     docker-compose up -d --build
                 '''
