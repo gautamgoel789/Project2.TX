@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  php-app:
+    build: .
+    container_name: php-app
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql-app
+    networks:
+      - app-network
+
+  mysql-app:
+    image: mysql:5.7
+    container_name: mysql-app
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: demo_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./employees.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
