@@ -1,35 +1,35 @@
-version: "3.8"
+version: '3.8'
 
 services:
   php-app:
     image: gautam789/php-fullstack-app:latest
     ports:
       - "3003:80"
-    environment:
-      DB_HOST: mysql-app
-      DB_USER: mydbuser
-      DB_PASSWORD: mydbpass
-      DB_NAME: mydbname
+    depends_on:
+      - mysql-app
     networks:
-      - app-net
+      - app-network
 
   mysql-app:
     image: mysql:5.7
+    container_name: mysql-app
+    ports:
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: mydbpass
-      MYSQL_DATABASE: mydbname
-      MYSQL_USER: mydbuser
-      MYSQL_PASSWORD: mydbpass
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: demo_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
     volumes:
       - db_data:/var/lib/mysql
       - ./employees.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - app-net
+      - app-network
 
 volumes:
   db_data:
 
 networks:
-  app-net:
+  app-network:
     driver: overlay
     attachable: true
