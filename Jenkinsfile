@@ -1,40 +1,75 @@
+
 pipeline {
+
     agent any
 
     environment {
-        IMAGE_NAME = 'gautam789/php-fullstack-app'
-        
+        DOCKER_REGISTRY = 'gautam789'
+        APP_IMAGE = 'php-mysql-app'
+        GIT_BRANCH = 'main'
+        GIT_REPO_URL = 'https://github.com/gautamgoel789/Project2.TX.git' 
     }
 
     stages {
-        stage('Checkout') {
+        stage('Clone Git Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/gautamgoel789/Project2.TX.git'
+                script {
+                    echo '🔄 Cloning repository...'
+                    sh 'rm -rf my-php-project'
+                    sh "git clone ${GIT_REPO_URL} my-php-project"
+                    dir('my-php-project') {
+                        sh "git checkout ${GIT_BRANCH}"
+                    }
+                }
             }
         }
-
-        stage('Build & Push PHP Image') {
+             stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    script {
-                        sh '''
-                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                            docker build -t ${IMAGE_NAME}:latest .
-                            docker push ${IMAGE_NAME}:latest
-                        '''
+                script {
+                    echo '🔐 Logging in to Docker Hub...'
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-creds-id', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                     }
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
-                sh '''
-                    docker stack rm sad_bose|| echo "No existing stack"
-                    sleep 10
-                    docker stack deploy -c docker-compose.yml sad_bose
-                '''
+                script {
+                    echo '🏗️ Building PHP-MySQL app image...'
+                    docker.build("${DOCKER_REGISTRY}/${APP_IMAGE}:${GIT_BRANCH}", './my-php-project')
+                }
             }
-        }                                                                                                                              
+        }
+
+      
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    echo '📤 Pushing Docker image to Docker Hub...'
+                    docker.image("${DOCKER_REGISTRY}/${APP_IMAGE}:${GIT_BRANCH}").push()
+                }
+            }
+        }
+
+        stage('Run with Docker Compose') {
+            steps {
+                script {
+                    echo '🚀 Running app with Docker Compose...'
+                    dir('my-php-project') {
+                        sh 'docker-compose up -d'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '🧹 Cleaning up unused Docker resources...'
+            sh 'docker system prune -f --volumes || true'
+        }
     }
 }
