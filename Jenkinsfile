@@ -28,13 +28,13 @@ pipeline {
         }
 
         stage('Deploy') {
-            steps {
-                sh '''
-                    docker stack rm vigilant_bose || echo "No existing stack"
-                    sleep 10
-                    docker stack deploy -c docker-compose.yml vigilant_bose
-                '''
-            }
-        }
+    steps {
+        sh '''
+            docker stop  vigilant_bose || echo "Container not running"
+            docker rm  vigilant_bose || echo "Container not found"
+            docker-compose up -d --build
+        '''
+    }
+}                                                                                                                                   
     }
 }
