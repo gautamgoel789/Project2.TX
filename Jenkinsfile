@@ -19,8 +19,8 @@ pipeline {
                     script {
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                            docker build -t gautam789/php-fullstack-app:latest .
-                            docker push gautam789/php-fullstack-app:latest
+                            docker build -t ${IMAGE_NAME}:latest .
+                            docker push ${IMAGE_NAME}:latest
                         '''
                     }
                 }
