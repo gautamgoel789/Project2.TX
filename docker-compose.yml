@@ -4,7 +4,7 @@ services:
   php-app:
     image: goutam24/php-fullstack-app:latest
     ports:
-      - "3002:80"
+      - "3003:80"
     secrets:
       - db_user
       - db_password
