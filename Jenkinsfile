@@ -26,7 +26,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                bat '''
+                sh '''
                     docker stack rm php-app || echo "Stack not found, continuing"
                     timeout 10
                     docker stack deploy -c docker-compose.yml php-app
