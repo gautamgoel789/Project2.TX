@@ -3,21 +3,21 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'goutam24/php-fullstack-app'
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-creds')
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds-id')
     }
 
     stages {
-        //stage('Checkout') {
-          //  steps {
-            //     git 'https://github.com/GoutamTx/php_application.git'
-            //}
-        //}
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/gautamgoel789/Project2.TX.git'
+            }
+        }
 
         stage('Build & Push PHP Image') {
             steps {
                 script {
                     docker.build("${IMAGE_NAME}:latest")
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-creds') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds-id') {
                         docker.image("${IMAGE_NAME}:latest").push()
                     }
                 }
