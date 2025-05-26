@@ -27,14 +27,14 @@ pipeline {
             }
         }
 
-     stage('Deploy') {
-    steps {
-        sh '''
-            docker rm -f php-app || echo "No existing container named php-app"
-            sleep 10
-            docker-compose up -d --build
-        '''
-    }
-}                                                                                                                               
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker stack rm php-app || echo "No existing stack"
+                    sleep 10
+                    docker stack deploy -c docker-compose.yml php-app
+                '''
+            }
+        }                                                                                                                              
     }
 }
