@@ -27,14 +27,14 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-    steps {
-        sh '''
-            docker stop  vigilant_bose || echo "Container not running"
-            docker rm  vigilant_bose || echo "Container not found"
-            docker-compose up -d --build
-        '''
-    }
-}                                                                                                                                   
+    stage('Deploy') {
+            steps {
+                sh'''
+                    docker stack rm php-app
+                    timeout /t 10
+                    docker stack deploy -c docker-compose.yml php-app
+                '''
+            }
+        }                                                                                                                                
     }
 }
