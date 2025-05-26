@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'goutam24/php-fullstack-app'
+        IMAGE_NAME = 'gautam789/php-fullstack-app'
         
     }
 
@@ -19,8 +19,8 @@ pipeline {
                     script {
                         sh '''
                             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                            docker build -t goutam24/php-fullstack-app:latest .
-                            docker push goutam24/php-fullstack-app:latest
+                            docker build -t gautam789/php-fullstack-app:latest .
+                            docker push gautam789/php-fullstack-app:latest
                         '''
                     }
                 }
