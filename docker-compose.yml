@@ -5,29 +5,21 @@ services:
     image: goutam24/php-fullstack-app:latest
     ports:
       - "3003:80"
-    secrets:
-      - db_user
-      - db_password
-      - db_name
     environment:
       DB_HOST: mysql-app
-      DB_USER_FILE: /run/secrets/db_user
-      DB_PASSWORD_FILE: /run/secrets/db_password
-      DB_NAME_FILE: /run/secrets/db_name
+      DB_USER: mydbuser
+      DB_PASSWORD: mydbpass
+      DB_NAME: mydbname
     networks:
       - app-net
 
   mysql-app:
     image: mysql:5.7
-    secrets:
-      - db_user
-      - db_password
-      - db_name
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_password
-      MYSQL_DATABASE_FILE: /run/secrets/db_name
-      MYSQL_USER_FILE: /run/secrets/db_user
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ROOT_PASSWORD: mydbpass
+      MYSQL_DATABASE: mydbname
+      MYSQL_USER: mydbuser
+      MYSQL_PASSWORD: mydbpass
     volumes:
       - db_data:/var/lib/mysql
       - ./employees.sql:/docker-entrypoint-initdb.d/init.sql
@@ -36,14 +28,6 @@ services:
 
 volumes:
   db_data:
-
-secrets:
-  db_user:
-    external: true
-  db_password:
-    external: true
-  db_name:
-    external: true
 
 networks:
   app-net:
