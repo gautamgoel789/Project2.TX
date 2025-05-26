@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'goutam24/php-fullstack-app'
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-creds-id')
+        
     }
 
     stages {
@@ -15,10 +15,13 @@ pipeline {
 
         stage('Build & Push PHP Image') {
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
-                        def image = docker.build("${IMAGE_NAME}:latest", ".")
-                        image.push()
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds-id', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        sh '''
+                            echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                            docker build -t goutam24/php-fullstack-app:latest .
+                            docker push goutam24/php-fullstack-app:latest
+                        '''
                     }
                 }
             }
