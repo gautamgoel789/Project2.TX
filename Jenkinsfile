@@ -16,9 +16,9 @@ pipeline {
         stage('Build & Push PHP Image') {
             steps {
                 script {
-                    docker.build("${IMAGE_NAME}:latest")
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-creds-id') {
-                        docker.image("${IMAGE_NAME}:latest").push()
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_HUB_CREDENTIALS}") {
+                        def image = docker.build("${IMAGE_NAME}:latest", ".")
+                        image.push()
                     }
                 }
             }
