@@ -24,8 +24,8 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./script.sql:/docker-entrypoint-initdb.d/script.sql  
-      - ./employees.sql:/docker-entrypoint-initdb.d/employees.sql
+      - /home/ubuntu/employees.sql:/docker-entrypoint-initdb.d/employees.sql
+      
     networks:
       - app_network
     healthcheck:  
