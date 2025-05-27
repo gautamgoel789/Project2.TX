@@ -1,32 +1,38 @@
 version: '3.8'
 
 services:
-  php-app:
-    image: gautam789/php-mysql-app:main
+  php:
+    build: .
+    container_name: php_app
     ports:
-      - "3002:80"
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
     depends_on:
-      - mysql-app
+      mysql:
+        condition: service_healthy  
     networks:
-      - app-network
+      - app_network
 
-  mysql-app:
+  mysql:
     image: mysql:5.7
     container_name: mysql-app
     ports:
-      - "3307:3306"
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Testing@123  # Use MYSQL_ROOT_PASSWORD, not MYSQL_ROOT_USERNAME
+      MYSQL_ROOT_PASSWORD: Testing@123
       MYSQL_DATABASE: demo_db
     volumes:
-      - db_data:/var/lib/mysql
-      - /home/gautam/employees.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - mysql_data:/var/lib/mysql
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql  
+      - ./employees.sql:/docker-entrypoint-initdb.d/employees.sql
     networks:
       - app-network
 
-volumes:
-  db_data:
-
 networks:
-  app-network:
-    attachable: true
+  app_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
