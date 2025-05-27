@@ -1,43 +1,34 @@
 version: '3.8'
 
 services:
-  php:
-    build: .
-    container_name: php_app
+  php-app:
+    image: goutam24/php-fullstack-app:latest
     ports:
-      - "8081:80"
-    volumes:
-      - /home/gautam/my-php-project:/var/www/html
+      - "3001:80"
     depends_on:
-      mysql:
-        condition: service_healthy  
+      - mysql-app
     networks:
-      - app_network
+      - app-network
 
-  mysql:
-    image: mysql:5.7 
-    container_name: mysql_db
-    environment:
-      MYSQL_ROOT_PASSWORD: Testing@123  
-      MYSQL_DATABASE: demo_db
+  mysql-app:
+    image: mysql:5.7
+    container_name: mysql-app
     ports:
       - "3306:3306"
+    environment:
+      MYSQL_ROOT_USERNAME: admin
+      MYSQL_ROOT_PASSWORD: admin 
+      MYSQL_DATABASE: demo_db
     volumes:
-      - mysql_data:/var/lib/mysql
-      - /home/gautam/employees.sql:/docker-entrypoint-initdb.d/employees.sql
-      
+      - db_data:/var/lib/mysql
+      - ./employees.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - app_network
-    healthcheck:  
-      test: ["CMD-SHELL", "mysqladmin ping -u root -pTesting@123"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
-networks:
-  app_network:
-    driver: bridge
+      - app-network
 
 volumes:
-  mysql_data:
-    driver: local
+  db_data:
+
+networks:
+  app-network:
+    driver: overlay
+    attachable: true
