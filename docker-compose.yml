@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   php:
-    build: .
+    build: /home/ubuntu/my-php-project
     container_name: php_app
     ports:
       - "8081:80"
     volumes:
-      - .:/var/www/html
+      - /home/ubuntu/my-php-project:/var/www/html
     depends_on:
       - mysql
     networks:
