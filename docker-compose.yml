@@ -30,5 +30,5 @@ volumes:
 
 networks:
   app-network:
-    driver: overlay
+    //driver: overlay
     attachable: true
