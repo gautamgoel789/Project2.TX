@@ -4,7 +4,7 @@ services:
   php-app:
     image: gautam789/php-mysql-app:main
     ports:
-      - "3001:80"
+      - "3002:80"
     depends_on:
       - mysql-app
     networks:
