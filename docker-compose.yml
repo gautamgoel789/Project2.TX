@@ -7,7 +7,7 @@ services:
     ports:
       - "3005:80"
     volumes:
-      - .:/var/www/html
+      - /home/gautam/my-php-project:/var/www/html
     depends_on:
       mysql:
         condition: service_healthy  
@@ -24,7 +24,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - /home/ubuntu/employees.sql:/docker-entrypoint-initdb.d/employees.sql
+      - /home/gautam/employees.sql:/docker-entrypoint-initdb.d/employees.sql
       
     networks:
       - app_network
