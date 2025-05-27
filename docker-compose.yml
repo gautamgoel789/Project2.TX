@@ -21,7 +21,7 @@ services:
       MYSQL_DATABASE: demo_db
     volumes:
       - db_data:/var/lib/mysql
-      - ./employees.sql:/docker-entrypoint-initdb.d/init.sql
+      - home/gautam/employees.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
