@@ -16,12 +16,11 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_USERNAME: admin
-      MYSQL_ROOT_PASSWORD: admin 
+      MYSQL_ROOT_PASSWORD: admin  # Use MYSQL_ROOT_PASSWORD, not MYSQL_ROOT_USERNAME
       MYSQL_DATABASE: demo_db
     volumes:
       - db_data:/var/lib/mysql
-      - home/gautam/employees.sql:/docker-entrypoint-initdb.d/init.sql
+      - /home/gautam/employees.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - app-network
 
